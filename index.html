@@ -1,13 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link href=“styles.css” rel=“stylesheet” type=“text/css” />
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css" /> 
     <title>Document</title>
 </head>
 <body>
-    
+    <main>
+        <section class="player-one">
+            <div class="player-wrapper">
+                <header class="player-one-icon">⭐</header>
+                <p class="player-one-wins">0 wins</p>
+            </div>
+        </section>
+        <section class="game-screen">
+            <div class="game-wrapper">
+                <header class="game-status">It's ⭐'s turn</header>
+                <div class="grid-container">
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                    <div class="grid-item"></div>
+                </div>
+            </div>
+        </section>
+        <section class="player-two">
+            <div class="player-wrapper">
+                <header class="player-two-icon">⭐</header>
+                <p class="player-two-wins">0 wins</p>
+            </div>
+        </section>
+    </main>
 </body>
 <script src=“./src/main.js”></script> 
 </html>

@@ -1,0 +1,30 @@
+main {
+    display: flex;
+    justify-content: space-between;
+    width: 100vw;
+    height: 100vh;
+}
+.player-one, .player-two {
+    height: 100%;
+    width: 25%;
+    border: 1px solid black;
+}
+.player-wrapper {
+    display: flex;
+    flex-direction: column;
+    background-color: red;
+    justify-content: center;
+    text-align: center;
+}
+.game-screen {
+    width: 50vw;
+    height: 100vh;
+    border: 1px solid black;
+}
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
+    
+}

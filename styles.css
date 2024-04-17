@@ -33,7 +33,9 @@ main {
 .game-status {
     font-size: 50px;
     color: rgb(0, 115, 255);
+    font-weight: 530;
 }
+
 .game-wrapper {
     display: flex;
     flex-direction: column;
@@ -57,7 +59,7 @@ main {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    border: 2px solid;
+    border: 3.5px solid;
     border-image: linear-gradient(45deg, red, blue) 1;
 }
 .grid-item#one, .grid-item#two, .grid-item#three {

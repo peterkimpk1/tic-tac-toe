@@ -19,14 +19,14 @@ var playerTwo = {
     placedPieces: []
 };
 var players = [playerOne, playerTwo]
-var playerTurn;
+var playerTurn = 1;
 
-gameBoardContainer.addEventListener('click',placeToken)
+gameBoardContainer.addEventListener('click', placeToken)
 
 function determineWin() {
-    var playerPieces = players[playerTurn].placedPieces
+    var playerPieces = players[playerTurn-1].placedPieces
     if((playerPieces.includes('one') && playerPieces.includes('two') && playerPieces.includes('three')) || (playerPieces.includes('four') && playerPieces.includes('five') && playerPieces.includes('six')) || (playerPieces.includes('seven') && playerPieces.includes('eight') && playerPieces.includes('nine')) || (playerPieces.includes('one') && playerPieces.includes('four') && playerPieces.includes('seven')) || (playerPieces.includes('two') && playerPieces.includes('five') && playerPieces.includes('eight')) || (playerPieces.includes('three') && playerPieces.includes('six') && playerPieces.includes('nine')) || (playerPieces.includes('one') && playerPieces.includes('five') && playerPieces.includes('nine')) || (playerPieces.includes('three') && playerPieces.includes('five') && playerPieces.includes('seven'))) {
-        players[playerTurn].wins += 1;
+        players[playerTurn-1].wins += 1;
         playerOneWins.innerText= `${playerOne.wins} wins`
         playerTwoWins.innerText = `${playerTwo.wins} wins`
         clearBoard();
@@ -50,25 +50,29 @@ function determineDraw() {
 }
 
 function determineTurn() {
-    var numberOfPlacedPieces = gameBoard.length;
-    if (numberOfPlacedPieces % 2 === 0) {
-        playerTurn = 0;
-        gameStatus.innerText = `It's ${players[1].token}'s turn`
-    }
-    else if (!numberOfPlacedPieces % 2 === 0) {
+    if (playerTurn % 2 === 0) {
         playerTurn = 1;
-        gameStatus.innerText = `It's ${players[0].token}'s turn`
+    }
+    else if (!playerTurn % 2 === 0) {
+        playerTurn = 2;
     }
 }   
 
 function placeToken(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
-      determineTurn();
+      e.target.innerText = players[playerTurn-1].token;
       gameBoard.push(e.target.id)
-      players[playerTurn].placedPieces.push(e.target.id)
-      e.target.innerText = players[playerTurn].token;
+      players[playerTurn - 1].placedPieces.push(e.target.id)
+      determineWin();
+      determineTurn();
+      displayGameStatus();
+      determineDraw();
     }
-    determineWin();
-    determineDraw();
 }
+
+function displayGameStatus() {
+    gameStatus.innerText = `It's ${players[playerTurn-1].token}'s turn`
+}
+
+displayGameStatus();

@@ -7,12 +7,14 @@ main {
 .player-one, .player-two {
     height: 100%;
     width: 25%;
-    border: 1px solid black;
+    background-image: linear-gradient(yellow,#ff0000);
+}
+.player-one-wins, .player-two-wins {
+    color: rgb(0, 115, 255);
 }
 .player-wrapper {
     display: flex;
     flex-direction: column;
-    background-color: red;
     justify-content: center;
     text-align: center;
     font-size: 50px;
@@ -24,6 +26,7 @@ main {
 }
 .game-status {
     font-size: 50px;
+    color: rgb(0, 115, 255);
 }
 .game-wrapper {
     display: flex;
@@ -41,10 +44,29 @@ main {
     padding: 10px;
 }
 .grid-item {
+    display: flex;
     height: 125px;
     width: 125px;
-    text-align: center;
-    font-size: 50px;
+    font-size: 75px;
+    justify-content: center;
+    align-items: center;
     padding: 10px;
-    border: 1px solid black;
+    border: 2px solid;
+    border-image: linear-gradient(45deg, red, blue) 1;
 }
+.grid-item#one, .grid-item#two, .grid-item#three {
+    border-top: none;
+}
+
+.grid-item#one, .grid-item#four, .grid-item#seven {
+    border-left: none;
+}
+
+.grid-item#three, .grid-item#six, .grid-item#nine {
+    border-right: none;
+}
+
+.grid-item#seven, .grid-item#eight, .grid-item#nine {
+    border-bottom: none;
+}
+

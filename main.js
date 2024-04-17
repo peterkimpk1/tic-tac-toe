@@ -55,6 +55,9 @@ function determineWin() {
         players[playerTurn-1].wins += 1;
         playerOneWins.innerText= `${playerOne.wins} wins`
         playerTwoWins.innerText = `${playerTwo.wins} wins`
+        gameStatus.innerText = `${players[playerTurn-1].token} wins!`
+        setTimeout(function() {
+            displayGameStatus()}, 2000)
         clearBoard();
     }
 }
@@ -74,9 +77,9 @@ function placeToken(e) {
       placePlayerPieces();
       gameBoard.push(e.target.id)
       e.target.innerText = players[playerTurn-1].token;
-      determineWin();
       determineTurn();
       displayGameStatus();
+      determineWin();
       determineDraw();
     }
 }
@@ -95,6 +98,8 @@ function clearBoard () {
 function determineDraw() {
     if (gameBoard.length === 9) {
         gameStatus.innerText = 'The game is a draw.'
+        setTimeout(function() {
+            displayGameStatus()},2000)
         clearBoard()
     }
 }

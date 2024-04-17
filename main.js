@@ -21,7 +21,15 @@ var playerTwo = {
 var players = [playerOne, playerTwo]
 var playerTurn = 1;
 var currentPiece;
-var winningCombinations = [{pieces:['one','two','three'],1:[],2:[]},{pieces:['four','five','six'],1:[],2:[]},{pieces:['seven','eight','nine'],1:[],2:[]},{pieces:['one','four','seven'],1:[],2:[]},{pieces:['two','five','eight'],1:[],2:[]},{pieces:['three','six','nine'],1:[],2:[]},{pieces:['one','five','nine'],1:[],2:[]},{pieces:['three','five','seven'],1:[],2:[]}]
+var winningCombinations = [
+    {pieces:['one','two','three'],1:[],2:[]}, 
+    {pieces:['four','five','six'],1:[],2:[]}, 
+    {pieces:['seven','eight','nine'],1:[],2:[]}, 
+    {pieces:['one','four','seven'],1:[],2:[]}, 
+    {pieces:['two','five','eight'],1:[],2:[]},
+    {pieces:['three','six','nine'],1:[],2:[]},
+    {pieces:['one','five','nine'],1:[],2:[]},
+    {pieces:['three','five','seven'],1:[],2:[]}];
 gameBoardContainer.addEventListener('click', placeToken)
 
 function playerOneWinCheck() {
@@ -73,11 +81,12 @@ function placeToken(e) {
     }
 }
 
-
 function clearBoard () {
     gameBoard = [];
-    players[0].placedPieces = [];
-    players[1].placedPieces = [];
+    for (var i = 0; i < winningCombinations.length; i++) {
+        winningCombinations[i]['1'] = [];
+        winningCombinations[i]['2'] = [];
+    }
     for (var i = 0; i < gameSquares.length; i++) {
         gameSquares[i].innerText = ""
     }
@@ -105,12 +114,3 @@ function displayGameStatus() {
 
 displayGameStatus();
 
-// function determineWin() {
-//     var playerPieces = players[playerTurn-1].placedPieces
-//     if((playerPieces.includes('one') && playerPieces.includes('two') && playerPieces.includes('three')) || (playerPieces.includes('four') && playerPieces.includes('five') && playerPieces.includes('six')) || (playerPieces.includes('seven') && playerPieces.includes('eight') && playerPieces.includes('nine')) || (playerPieces.includes('one') && playerPieces.includes('four') && playerPieces.includes('seven')) || (playerPieces.includes('two') && playerPieces.includes('five') && playerPieces.includes('eight')) || (playerPieces.includes('three') && playerPieces.includes('six') && playerPieces.includes('nine')) || (playerPieces.includes('one') && playerPieces.includes('five') && playerPieces.includes('nine')) || (playerPieces.includes('three') && playerPieces.includes('five') && playerPieces.includes('seven'))) {
-//         players[playerTurn-1].wins += 1;
-        // playerOneWins.innerText= `${playerOne.wins} wins`
-        // playerTwoWins.innerText = `${playerTwo.wins} wins`
-        // clearBoard();
-//     }
-// }

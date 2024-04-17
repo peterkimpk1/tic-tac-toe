@@ -9,20 +9,26 @@ main {
     width: 25%;
     background-image: linear-gradient(yellow,#ff0000);
 }
-.player-one-wins, .player-two-wins {
-    color: rgb(0, 115, 255);
+.player-one-icon, .player-two-icon {
+    line-height: 3;
+    margin: 0;
 }
+
 .player-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     text-align: center;
     font-size: 50px;
 }
+.player-one-wins, .player-two-wins {
+    margin-top: -40px;
+    color: rgb(0, 115, 255);
+    font-weight: 530;
+}
+
 .game-screen {
     width: 50%;
     height: 100%;
-    border: 1px solid black;
 }
 .game-status {
     font-size: 50px;

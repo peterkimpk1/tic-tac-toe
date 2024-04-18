@@ -6,19 +6,8 @@ var gameStatus = document.querySelector('.game-status');
 var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
-var playerOne = {
-    id: 0,
-    token: playerOneToken.innerText,
-    wins: 0,
-};
 
-var playerTwo = {
-    id: 1,
-    token: playerTwoToken.innerText,
-    wins: 0,
-};
-
-var players = [[],playerOne, playerTwo]
+var players = [{},{},{}]
 var playerTurn = 1;
 var currentPiece = '';
 var winningCombinations = [
@@ -31,6 +20,21 @@ var winningCombinations = [
     {pieces:['one','five','nine'],1:[],2:[]},
     {pieces:['three','five','seven'],1:[],2:[]}];
 gameBoardContainer.addEventListener('click', placeToken)
+
+function createPlayers() {
+    var playerOne = {
+        id: 0,
+        token: playerOneToken.innerText,
+        wins: 0,
+    };
+    
+    var playerTwo = {
+        id: 1,
+        token: playerTwoToken.innerText,
+        wins: 0,
+    };
+    return players[1] = playerOne, players[2] = playerTwo;
+}
 
 function playerOneWinCheck() {
     for (var i = 0; i < winningCombinations.length; i++) {
@@ -53,8 +57,8 @@ function playerTwoWinCheck() {
 function determineWin() {
     if (playerOneWinCheck() || playerTwoWinCheck()) {
         players[playerTurn].wins += 1;
-        playerOneWins.innerText= `${playerOne.wins} wins`
-        playerTwoWins.innerText = `${playerTwo.wins} wins`
+        playerOneWins.innerText= `${players[1]} wins`
+        playerTwoWins.innerText = `${players[2]} wins`
         clearBoard();
     }
 }
@@ -129,5 +133,5 @@ function showWin() {
     passTurn();
 }
 
+createPlayers();
 displayGameStatus();
-

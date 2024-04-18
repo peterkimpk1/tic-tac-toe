@@ -18,9 +18,9 @@ var playerTwo = {
     wins: 0,
 };
 
-var players = [playerOne, playerTwo]
+var players = [[],playerOne, playerTwo]
 var playerTurn = 1;
-var currentPiece;
+var currentPiece = '';
 var winningCombinations = [
     {pieces:['one','two','three'],1:[],2:[]}, 
     {pieces:['four','five','six'],1:[],2:[]}, 
@@ -52,7 +52,7 @@ function playerTwoWinCheck() {
 
 function determineWin() {
     if (playerOneWinCheck() || playerTwoWinCheck()) {
-        players[playerTurn-1].wins += 1;
+        players[playerTurn].wins += 1;
         playerOneWins.innerText= `${playerOne.wins} wins`
         playerTwoWins.innerText = `${playerTwo.wins} wins`
         clearBoard();
@@ -73,16 +73,17 @@ function placeToken(e) {
       currentPiece = e.target.id;
       placePlayerPieces();
       gameBoard.push(e.target.id)
-      e.target.innerText = players[playerTurn-1].token;
+      e.target.innerText = players[playerTurn].token;
       determineWin();
-      determineTurn();
-      displayGameStatus();
-      determineDraw();
     }
+    passTurn();
+    displayGameStatus();
+    determineDraw();
 }
 
-function clearBoard () {
+function clearBoard () { 
     gameBoard = [];
+    currentPiece = undefined;
     for (var i = 0; i < winningCombinations.length; i++) {
         winningCombinations[i]['1'] = [];
         winningCombinations[i]['2'] = [];
@@ -95,11 +96,12 @@ function clearBoard () {
 function determineDraw() {
     if (gameBoard.length === 9) {
         gameStatus.innerText = 'The game is a draw.'
+        addDelayedMessage();
         clearBoard()
     }
 }
 
-function determineTurn() {
+function passTurn() {
     if (playerTurn % 2 === 0) {
         playerTurn = 1;
     }
@@ -109,7 +111,22 @@ function determineTurn() {
 }   
 
 function displayGameStatus() {
-    gameStatus.innerText = `It's ${players[playerTurn-1].token}'s turn`
+    gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`
+    if (currentPiece === undefined) {
+        showWin();
+    }
+}
+
+function addDelayedMessage() {
+    setTimeout(function() {
+        gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`}, 2000)
+}
+
+function showWin() {
+    passTurn();
+    gameStatus.innerText = `${players[playerTurn].token} wins!`
+    addDelayedMessage();
+    passTurn();
 }
 
 displayGameStatus();

@@ -6,7 +6,6 @@ var gameStatus = document.querySelector('.game-status');
 var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
-
 var players = [{},{},{}]
 var playerTurn = 1;
 var currentPiece = '';
@@ -27,13 +26,25 @@ function createPlayers() {
         token: playerOneToken.innerText,
         wins: 0,
     };
-    
     var playerTwo = {
         id: 1,
         token: playerTwoToken.innerText,
         wins: 0,
     };
     return players[1] = playerOne, players[2] = playerTwo;
+}
+
+function storePlayersData() {
+    localStorage.setItem('playerOneData',`${JSON.stringify(players[1])}`)
+    localStorage.setItem('playerTwoData', `${JSON.stringify(players[2])}`)
+}
+
+function retrievePlayersData() {
+    var retrievedPlayerOne = localStorage.getItem('playerOneData');
+    var parsedPlayerOne = JSON.parse(retrievedPlayerOne)
+    var retrievedPlayerTwo = localStorage.getItem('playerTwoData');
+    var parsedPlayerTwo = JSON.parse(retrievedPlayerTwo)
+    return players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
 }
 
 function playerOneWinCheck() {
@@ -57,13 +68,12 @@ function playerTwoWinCheck() {
 function determineWin() {
     if (playerOneWinCheck() || playerTwoWinCheck()) {
         players[playerTurn].wins += 1;
-        playerOneWins.innerText= `${players[1]} wins`
-        playerTwoWins.innerText = `${players[2]} wins`
+        storePlayersData();
         clearBoard();
     }
 }
 
-function placePlayerPieces() {
+function checkPlayerPieces() {
     for (var i = 0; i < winningCombinations.length; i++) {
         if (winningCombinations[i].pieces.includes(currentPiece)) {
             winningCombinations[i][playerTurn].push(playerTurn)
@@ -75,7 +85,7 @@ function placeToken(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
       currentPiece = e.target.id;
-      placePlayerPieces();
+      checkPlayerPieces();
       gameBoard.push(e.target.id)
       e.target.innerText = players[playerTurn].token;
       determineWin();
@@ -116,6 +126,8 @@ function passTurn() {
 
 function displayGameStatus() {
     gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`
+    playerOneWins.innerText= `${players[1].wins} wins`
+    playerTwoWins.innerText = `${players[2].wins} wins`
     if (currentPiece === undefined) {
         showWin();
     }
@@ -134,4 +146,5 @@ function showWin() {
 }
 
 createPlayers();
+retrievePlayersData();
 displayGameStatus();

@@ -4,12 +4,14 @@ main {
     width: 100vw;
     height: 100vh;
 }
-.player-one, .player-two {
+.player-one, 
+.player-two {
     height: 100%;
     width: 25%;
     background-image: linear-gradient(yellow,#ff0000);
 }
-.player-one-icon, .player-two-icon {
+.player-one-icon, 
+.player-two-icon {
     line-height: 3;
     margin: 0;
 }
@@ -20,7 +22,8 @@ main {
     text-align: center;
     font-size: 50px;
 }
-.player-one-wins, .player-two-wins {
+.player-one-wins, 
+.player-two-wins {
     margin-top: -40px;
     color: rgb(0, 115, 255);
     font-weight: 530;
@@ -62,19 +65,27 @@ main {
     border: 3.5px solid;
     border-image: linear-gradient(45deg, red, blue) 1;
 }
-.grid-item#one, .grid-item#two, .grid-item#three {
+.grid-item#one, 
+.grid-item#two, 
+.grid-item#three {
     border-top: none;
 }
 
-.grid-item#one, .grid-item#four, .grid-item#seven {
+.grid-item#one, 
+.grid-item#four, 
+.grid-item#seven {
     border-left: none;
 }
 
-.grid-item#three, .grid-item#six, .grid-item#nine {
+.grid-item#three, 
+.grid-item#six, 
+.grid-item#nine {
     border-right: none;
 }
 
-.grid-item#seven, .grid-item#eight, .grid-item#nine {
+.grid-item#seven, 
+.grid-item#eight, 
+.grid-item#nine {
     border-bottom: none;
 }
 

@@ -22,13 +22,12 @@ var winningCombinations = [
 gameBoardContainer.addEventListener('click', placeToken)
 window.addEventListener('load', initialLoad)
 window.addEventListener('DOMContentLoaded', (event) => {
-    if ((localStorage.getItem('playerOneData').wins) !== 0 && (localStorage.getItem('playerTwoData').wins !== 0)) {
+    if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
         retrievePlayersData();
         displayGameStatus();
         window.removeEventListener('load',initialLoad)
     }
 })
-
 
 function createPlayer(id,token) {
     return {
@@ -65,18 +64,9 @@ function retrievePlayersData() {
     return players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
 }
 
-function playerOneWinCheck() {
+function playerWinCheck() {
     for (var i = 0; i < winningCombinations.length; i++) {
-        if(winningCombinations[i]['1'].length === 3) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function playerTwoWinCheck() {
-    for (var i = 0; i < winningCombinations.length; i++) {
-        if(winningCombinations[i]['2'].length === 3) {
+        if(winningCombinations[i]['1'].length === 3 || winningCombinations[i]['2'].length === 3 ) {
             return true;
         }
     }
@@ -84,7 +74,7 @@ function playerTwoWinCheck() {
 }
 
 function determineWin() {
-    if (playerOneWinCheck() || playerTwoWinCheck()) {
+    if (playerWinCheck()) {
         players[playerTurn].wins += 1;
         storePlayersData();
         clearBoard();

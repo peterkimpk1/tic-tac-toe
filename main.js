@@ -77,7 +77,6 @@ function determineWin() {
     if (playerWinCheck()) {
         players[playerTurn].wins += 1;
         storePlayersData();
-        clearBoard();
     }
 }
 
@@ -100,7 +99,6 @@ function placeToken(e) {
       passTurn();
     }
     displayGameStatus();
-    determineDraw();
 }
 
 function clearBoard () { 
@@ -111,15 +109,7 @@ function clearBoard () {
         winningCombinations[i]['2'] = [];
     }
     for (var i = 0; i < gameSquares.length; i++) {
-        gameSquares[i].innerText = ""
-    }
-}
-
-function determineDraw() {
-    if (gameBoard.length === 9) {
-        gameStatus.innerText = 'The game is a draw.'
-        addDelayedMessage();
-        clearBoard()
+        gameSquares[i].innerText = "";
     }
 }
 
@@ -136,8 +126,17 @@ function displayGameStatus() {
     gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`
     playerOneWins.innerText= `${players[1].wins} wins`
     playerTwoWins.innerText = `${players[2].wins} wins`
-    if (currentPiece === undefined) {
-        showWin();
+    if (playerWinCheck()) {
+        passTurn();
+        gameStatus.innerText = `${players[playerTurn].token} wins!`
+        addDelayedMessage();
+        passTurn();
+        clearBoard();
+    }
+    else if (gameBoard.length === 9) {
+        gameStatus.innerText = 'The game is a draw.'
+        addDelayedMessage();
+        clearBoard();
     }
 }
 
@@ -146,11 +145,6 @@ function addDelayedMessage() {
         gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`}, 2000)
 }
 
-function showWin() {
-    passTurn();
-    gameStatus.innerText = `${players[playerTurn].token} wins!`
-    addDelayedMessage();
-    passTurn();
-}
+
 
 

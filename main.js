@@ -6,19 +6,7 @@ var gameStatus = document.querySelector('.game-status');
 var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
-var playerOne = {
-    id: 0,
-    token: playerOneToken.innerText,
-    wins: 0,
-};
-
-var playerTwo = {
-    id: 1,
-    token: playerTwoToken.innerText,
-    wins: 0,
-};
-
-var players = [[],playerOne, playerTwo]
+var players = [];
 var playerTurn = 1;
 var currentPiece = '';
 var winningCombinations = [
@@ -30,7 +18,52 @@ var winningCombinations = [
     {pieces:['three','six','nine'],1:[],2:[]},
     {pieces:['one','five','nine'],1:[],2:[]},
     {pieces:['three','five','seven'],1:[],2:[]}];
+
 gameBoardContainer.addEventListener('click', placeToken)
+window.addEventListener('load', initialLoad)
+window.addEventListener('DOMContentLoaded', (event) => {
+    if ((localStorage.getItem('playerOneData').wins) !== 0 && (localStorage.getItem('playerTwoData').wins !== 0)) {
+        retrievePlayersData();
+        displayGameStatus();
+        window.removeEventListener('load',initialLoad)
+    }
+})
+
+
+function createPlayer(id,token) {
+    return {
+        id: id,
+        token: token,
+        wins: 0
+    };
+}
+
+function loadPlayers() {
+    for (var i = players.length; i > 0; i--) {
+        [players[i],players[i-1]] = [players[i-1],[players[i]]]
+    }
+}
+
+function initialLoad() {
+    players.push(createPlayer(0,playerOneToken.innerText));
+    players.push(createPlayer(1,playerTwoToken.innerText));
+    loadPlayers();
+    storePlayersData();
+    displayGameStatus();
+}
+
+function storePlayersData() {
+    localStorage.setItem('playerOneData',`${JSON.stringify(players[1])}`)
+    localStorage.setItem('playerTwoData', `${JSON.stringify(players[2])}`)
+}
+
+function retrievePlayersData() {
+    var retrievedPlayerOne = localStorage.getItem('playerOneData');
+    var parsedPlayerOne = JSON.parse(retrievedPlayerOne)
+    var retrievedPlayerTwo = localStorage.getItem('playerTwoData');
+    var parsedPlayerTwo = JSON.parse(retrievedPlayerTwo)
+    return players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
+}
 
 function playerOneWinCheck() {
     for (var i = 0; i < winningCombinations.length; i++) {
@@ -53,8 +86,7 @@ function playerTwoWinCheck() {
 function determineWin() {
     if (playerOneWinCheck() || playerTwoWinCheck()) {
         players[playerTurn].wins += 1;
-        playerOneWins.innerText= `${playerOne.wins} wins`
-        playerTwoWins.innerText = `${playerTwo.wins} wins`
+        storePlayersData();
         clearBoard();
     }
 }
@@ -75,8 +107,8 @@ function placeToken(e) {
       gameBoard.push(e.target.id)
       e.target.innerText = players[playerTurn].token;
       determineWin();
+      passTurn();
     }
-    passTurn();
     displayGameStatus();
     determineDraw();
 }
@@ -112,6 +144,8 @@ function passTurn() {
 
 function displayGameStatus() {
     gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`
+    playerOneWins.innerText= `${players[1].wins} wins`
+    playerTwoWins.innerText = `${players[2].wins} wins`
     if (currentPiece === undefined) {
         showWin();
     }
@@ -129,5 +163,4 @@ function showWin() {
     passTurn();
 }
 
-displayGameStatus();
 

@@ -6,7 +6,7 @@ var gameStatus = document.querySelector('.game-status');
 var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
-var players = [{},{},{}]
+var players = [];
 var playerTurn = 1;
 var currentPiece = '';
 var winningCombinations = [
@@ -18,20 +18,38 @@ var winningCombinations = [
     {pieces:['three','six','nine'],1:[],2:[]},
     {pieces:['one','five','nine'],1:[],2:[]},
     {pieces:['three','five','seven'],1:[],2:[]}];
-gameBoardContainer.addEventListener('click', placeToken)
 
-function createPlayers() {
-    var playerOne = {
-        id: 0,
-        token: playerOneToken.innerText,
-        wins: 0,
+gameBoardContainer.addEventListener('click', placeToken)
+window.addEventListener('load', initialLoad)
+window.addEventListener('DOMContentLoaded', (event) => {
+    if ((localStorage.getItem('playerOneData').wins) !== 0 && (localStorage.getItem('playerTwoData').wins !== 0)) {
+        retrievePlayersData();
+        displayGameStatus();
+        window.removeEventListener('load',initialLoad)
+    }
+})
+
+
+function createPlayer(id,token) {
+    return {
+        id: id,
+        token: token,
+        wins: 0
     };
-    var playerTwo = {
-        id: 1,
-        token: playerTwoToken.innerText,
-        wins: 0,
-    };
-    return players[1] = playerOne, players[2] = playerTwo;
+}
+
+function loadPlayers() {
+    for (var i = players.length; i > 0; i--) {
+        [players[i],players[i-1]] = [players[i-1],[players[i]]]
+    }
+}
+
+function initialLoad() {
+    players.push(createPlayer(0,playerOneToken.innerText));
+    players.push(createPlayer(1,playerTwoToken.innerText));
+    loadPlayers();
+    storePlayersData();
+    displayGameStatus();
 }
 
 function storePlayersData() {
@@ -73,7 +91,7 @@ function determineWin() {
     }
 }
 
-function checkPlayerPieces() {
+function placePlayerPieces() {
     for (var i = 0; i < winningCombinations.length; i++) {
         if (winningCombinations[i].pieces.includes(currentPiece)) {
             winningCombinations[i][playerTurn].push(playerTurn)
@@ -85,12 +103,12 @@ function placeToken(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
       currentPiece = e.target.id;
-      checkPlayerPieces();
+      placePlayerPieces();
       gameBoard.push(e.target.id)
       e.target.innerText = players[playerTurn].token;
       determineWin();
+      passTurn();
     }
-    passTurn();
     displayGameStatus();
     determineDraw();
 }
@@ -145,6 +163,4 @@ function showWin() {
     passTurn();
 }
 
-createPlayers();
-retrievePlayersData();
-displayGameStatus();
+

@@ -7,7 +7,6 @@ var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
 var players = [];
-var currentPiece = '';
 var winningCombinations = [
     {pieces:['one','two','three'],1:[],2:[]}, 
     {pieces:['four','five','six'],1:[],2:[]}, 
@@ -69,7 +68,7 @@ function retrievePlayersData() {
 
 function playerWinCheck() {
     for (var i = 0; i < winningCombinations.length; i++) {
-        if(winningCombinations[i]['1'].length === 3 || winningCombinations[i]['2'].length === 3 ) {
+        if(winningCombinations[i][['1']].length === 3 || winningCombinations[i]['2'].length === 3 ) {
             return true;
         }
     }

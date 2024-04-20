@@ -7,7 +7,6 @@ var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
 var players = [];
-var playerTurn = 1;
 var currentPiece = '';
 var winningCombinations = [
     {pieces:['one','two','three'],1:[],2:[]}, 
@@ -19,21 +18,21 @@ var winningCombinations = [
     {pieces:['one','five','nine'],1:[],2:[]},
     {pieces:['three','five','seven'],1:[],2:[]}];
 
-gameBoardContainer.addEventListener('click', placeToken)
-window.addEventListener('load', initialLoad)
-window.addEventListener('DOMContentLoaded', (event) => {
-    if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
-        retrievePlayersData();
-        displayGameStatus();
-        window.removeEventListener('load',initialLoad)
-    }
-})
+gameBoardContainer.addEventListener('click', updateGameBoard)
+window.addEventListener('DOMContentLoaded', initialLoad)
+// window.addEventListener('DOMContentLoaded', (event) => {
+//     if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
+//         retrievePlayersData();
+//         displayGameStatus();
+//         window.removeEventListener('DOMContentLoaded',initialLoad)
+//     }
+// })
 
 function createPlayer(id,token) {
     return {
         id: id,
         token: token,
-        wins: 0
+        wins: 0,
     };
 }
 
@@ -41,6 +40,7 @@ function loadPlayers() {
     for (var i = players.length; i > 0; i--) {
         [players[i],players[i-1]] = [players[i-1],[players[i]]]
     }
+    players[0] = 1;
 }
 
 function initialLoad() {
@@ -75,35 +75,41 @@ function playerWinCheck() {
 
 function determineWin() {
     if (playerWinCheck()) {
-        players[playerTurn].wins += 1;
+        players[(players[0])].wins += 1;
         storePlayersData();
     }
 }
 
-function placePlayerPieces() {
+function storePlayerPieces() {
     for (var i = 0; i < winningCombinations.length; i++) {
-        if (winningCombinations[i].pieces.includes(currentPiece)) {
-            winningCombinations[i][playerTurn].push(playerTurn)
+        if (winningCombinations[i].pieces.includes(gameBoard[gameBoard.length-1])) {
+            winningCombinations[i][(players[0])].push(players[0])
         }
     }
 }
 
-function placeToken(e) {
+function updateGameBoard(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
-      currentPiece = e.target.id;
-      placePlayerPieces();
       gameBoard.push(e.target.id)
-      e.target.innerText = players[playerTurn].token;
+      storePlayerPieces();
+      placeToken();
       determineWin();
       passTurn();
     }
     displayGameStatus();
 }
 
+function placeToken() {
+    for (var i = 0; i < gameSquares.length; i++) {
+        if (gameBoard[gameBoard.length-1] === gameSquares[i].id) {
+            gameSquares[i].innerText = players[(players[0])].token;
+        }
+    }
+}
+
 function clearBoard () { 
     gameBoard = [];
-    currentPiece = undefined;
     for (var i = 0; i < winningCombinations.length; i++) {
         winningCombinations[i]['1'] = [];
         winningCombinations[i]['2'] = [];
@@ -114,21 +120,21 @@ function clearBoard () {
 }
 
 function passTurn() {
-    if (playerTurn % 2 === 0) {
-        playerTurn = 1;
+    if (players[0] % 2 === 0) {
+        players[0] = 1;
     }
-    else if (!playerTurn % 2 === 0) {
-        playerTurn = 2;
+    else if (!players[0] % 2 === 0) {
+        players[0] = 2;
     }
 }   
 
 function displayGameStatus() {
-    gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`
+    gameStatus.innerText = `It's ${players[(players[0])].token}'s turn`
     playerOneWins.innerText= `${players[1].wins} wins`
     playerTwoWins.innerText = `${players[2].wins} wins`
     if (playerWinCheck()) {
         passTurn();
-        gameStatus.innerText = `${players[playerTurn].token} wins!`
+        gameStatus.innerText = `${players[(players[0])].token} wins!`
         addDelayedMessage();
         passTurn();
         clearBoard();
@@ -142,7 +148,7 @@ function displayGameStatus() {
 
 function addDelayedMessage() {
     setTimeout(function() {
-        gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`}, 2000)
+        gameStatus.innerText = `It's ${players[(players[0])].token}'s turn`}, 2000)
 }
 
 

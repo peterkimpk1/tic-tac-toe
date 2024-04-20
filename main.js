@@ -19,14 +19,14 @@ var winningCombinations = [
     {pieces:['three','five','seven'],1:[],2:[]}];
 
 gameBoardContainer.addEventListener('click', updateGameBoard)
-window.addEventListener('DOMContentLoaded', initialLoad)
-// window.addEventListener('DOMContentLoaded', (event) => {
-//     if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
-//         retrievePlayersData();
-//         displayGameStatus();
-//         window.removeEventListener('DOMContentLoaded',initialLoad)
-//     }
-// })
+window.addEventListener('load', initialLoad)
+window.addEventListener('DOMContentLoaded', (event) => {
+    if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
+        retrievePlayersData();
+        displayGameStatus();
+        window.removeEventListener('load',initialLoad)
+    }
+})
 
 function createPlayer(id,token) {
     return {
@@ -52,6 +52,7 @@ function initialLoad() {
 }
 
 function storePlayersData() {
+    localStorage.setItem('playerTurnData', `${JSON.stringify(players[0])}`)
     localStorage.setItem('playerOneData',`${JSON.stringify(players[1])}`)
     localStorage.setItem('playerTwoData', `${JSON.stringify(players[2])}`)
 }
@@ -61,7 +62,9 @@ function retrievePlayersData() {
     var parsedPlayerOne = JSON.parse(retrievedPlayerOne)
     var retrievedPlayerTwo = localStorage.getItem('playerTwoData');
     var parsedPlayerTwo = JSON.parse(retrievedPlayerTwo)
-    return players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
+    var retrievePlayerTurn = localStorage.getItem('playerTurnData');
+    var parsedPlayerTurn = JSON.parse(retrievePlayerTurn)
+    return players[0] = parsedPlayerTurn, players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
 }
 
 function playerWinCheck() {
@@ -76,7 +79,9 @@ function playerWinCheck() {
 function determineWin() {
     if (playerWinCheck()) {
         players[(players[0])].wins += 1;
+        passTurn();
         storePlayersData();
+        passTurn();
     }
 }
 

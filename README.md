@@ -1,4 +1,4 @@
-# tic-tac-toe
+# Tic-Tac-Toe
 
 ### Abstract: 
 This tic-tac-toe game was built by using HTML, CSS, and Javascript. Player 1 goes first, and if one of the players win, the other player goes first in the next game. In the chance that there is a tie, the game will briefly display that there's been a draw, and reset the board for the next game. This application also uses local storage to store your wins and allows for page refresh. 
@@ -31,3 +31,4 @@ Final solo project for Module 1 and completed in 15 hours.
 *Challenges*
 1. Implementing initial load function to work with local storage
 2. Moving player objects to necessary index positions
+3. Separating data model update and DOM update functions

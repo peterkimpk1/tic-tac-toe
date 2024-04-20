@@ -7,8 +7,6 @@ var gameBoardContainer = document.querySelector('.grid-container');
 var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
 var players = [];
-var playerTurn = 1;
-var currentPiece = '';
 var winningCombinations = [
     {pieces:['one','two','three'],1:[],2:[]}, 
     {pieces:['four','five','six'],1:[],2:[]}, 
@@ -19,7 +17,7 @@ var winningCombinations = [
     {pieces:['one','five','nine'],1:[],2:[]},
     {pieces:['three','five','seven'],1:[],2:[]}];
 
-gameBoardContainer.addEventListener('click', placeToken)
+gameBoardContainer.addEventListener('click', updateGameBoard)
 window.addEventListener('load', initialLoad)
 window.addEventListener('DOMContentLoaded', (event) => {
     if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
@@ -33,7 +31,7 @@ function createPlayer(id,token) {
     return {
         id: id,
         token: token,
-        wins: 0
+        wins: 0,
     };
 }
 
@@ -41,6 +39,7 @@ function loadPlayers() {
     for (var i = players.length; i > 0; i--) {
         [players[i],players[i-1]] = [players[i-1],[players[i]]]
     }
+    players[0] = 1;
 }
 
 function initialLoad() {
@@ -52,6 +51,7 @@ function initialLoad() {
 }
 
 function storePlayersData() {
+    localStorage.setItem('playerTurnData', `${JSON.stringify(players[0])}`)
     localStorage.setItem('playerOneData',`${JSON.stringify(players[1])}`)
     localStorage.setItem('playerTwoData', `${JSON.stringify(players[2])}`)
 }
@@ -61,12 +61,14 @@ function retrievePlayersData() {
     var parsedPlayerOne = JSON.parse(retrievedPlayerOne)
     var retrievedPlayerTwo = localStorage.getItem('playerTwoData');
     var parsedPlayerTwo = JSON.parse(retrievedPlayerTwo)
-    return players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
+    var retrievePlayerTurn = localStorage.getItem('playerTurnData');
+    var parsedPlayerTurn = JSON.parse(retrievePlayerTurn)
+    return players[0] = parsedPlayerTurn, players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
 }
 
 function playerWinCheck() {
     for (var i = 0; i < winningCombinations.length; i++) {
-        if(winningCombinations[i]['1'].length === 3 || winningCombinations[i]['2'].length === 3 ) {
+        if(winningCombinations[i][['1']].length === 3 || winningCombinations[i]['2'].length === 3 ) {
             return true;
         }
     }
@@ -75,82 +77,84 @@ function playerWinCheck() {
 
 function determineWin() {
     if (playerWinCheck()) {
-        players[playerTurn].wins += 1;
+        players[(players[0])].wins += 1;
+        passTurn();
         storePlayersData();
-        clearBoard();
+        passTurn();
     }
 }
 
-function placePlayerPieces() {
+function storePlayerPieces() {
     for (var i = 0; i < winningCombinations.length; i++) {
-        if (winningCombinations[i].pieces.includes(currentPiece)) {
-            winningCombinations[i][playerTurn].push(playerTurn)
+        if (winningCombinations[i].pieces.includes(gameBoard[gameBoard.length-1])) {
+            winningCombinations[i][(players[0])].push(players[0])
         }
     }
 }
 
-function placeToken(e) {
+function updateGameBoard(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
-      currentPiece = e.target.id;
-      placePlayerPieces();
       gameBoard.push(e.target.id)
-      e.target.innerText = players[playerTurn].token;
+      storePlayerPieces();
+      placeToken();
       determineWin();
       passTurn();
     }
     displayGameStatus();
-    determineDraw();
+}
+
+function placeToken() {
+    for (var i = 0; i < gameSquares.length; i++) {
+        if (gameBoard[gameBoard.length-1] === gameSquares[i].id) {
+            gameSquares[i].innerText = players[(players[0])].token;
+        }
+    }
 }
 
 function clearBoard () { 
     gameBoard = [];
-    currentPiece = undefined;
     for (var i = 0; i < winningCombinations.length; i++) {
         winningCombinations[i]['1'] = [];
         winningCombinations[i]['2'] = [];
     }
     for (var i = 0; i < gameSquares.length; i++) {
-        gameSquares[i].innerText = ""
-    }
-}
-
-function determineDraw() {
-    if (gameBoard.length === 9) {
-        gameStatus.innerText = 'The game is a draw.'
-        addDelayedMessage();
-        clearBoard()
+        gameSquares[i].innerText = "";
     }
 }
 
 function passTurn() {
-    if (playerTurn % 2 === 0) {
-        playerTurn = 1;
+    if (players[0] % 2 === 0) {
+        players[0] = 1;
     }
-    else if (!playerTurn % 2 === 0) {
-        playerTurn = 2;
+    else if (!players[0] % 2 === 0) {
+        players[0] = 2;
     }
 }   
 
 function displayGameStatus() {
-    gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`
+    gameStatus.innerText = `It's ${players[(players[0])].token}'s turn`
     playerOneWins.innerText= `${players[1].wins} wins`
     playerTwoWins.innerText = `${players[2].wins} wins`
-    if (currentPiece === undefined) {
-        showWin();
+    if (playerWinCheck()) {
+        passTurn();
+        gameStatus.innerText = `${players[(players[0])].token} wins!`
+        addDelayedMessage();
+        passTurn();
+        clearBoard();
+    }
+    else if (gameBoard.length === 9) {
+        gameStatus.innerText = 'The game is a draw.'
+        addDelayedMessage();
+        clearBoard();
     }
 }
 
 function addDelayedMessage() {
     setTimeout(function() {
-        gameStatus.innerText = `It's ${players[playerTurn].token}'s turn`}, 2000)
+        gameStatus.innerText = `It's ${players[(players[0])].token}'s turn`}, 2000)
 }
 
-function showWin() {
-    passTurn();
-    gameStatus.innerText = `${players[playerTurn].token} wins!`
-    addDelayedMessage();
-    passTurn();
-}
+
 
 

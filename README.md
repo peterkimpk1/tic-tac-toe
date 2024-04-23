@@ -14,13 +14,13 @@ This tic-tac-toe game was built by using HTML, CSS, and Javascript. Player 1 goe
 https://imgur.com/a/tDaD49u
 
 ### Context:
-Final solo project for Module 1 and completed in 15 hours.
+Final solo project for Module 1 and completed in 20 hours.
 
 ### Learning Goals:
 * Write HTML and CSS to match the given comp
 * Functions are pure whenever possible, DRY, and use SRP
 * Implement local storage for player wins
-* Separating data model and DOM functionality in functions
+* Separating data model and DOM functionality in functions and in different files
 
 ### Wins + Challenges: 
 *Wins*

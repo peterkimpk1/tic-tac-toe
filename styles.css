@@ -4,12 +4,14 @@ main {
     width: 100vw;
     height: 100vh;
 }
+
 .player-one, 
 .player-two {
     height: 100%;
     width: 25%;
     background-image: linear-gradient(yellow,#ff0000);
 }
+
 .player-one-icon, 
 .player-two-icon {
     line-height: 3;
@@ -22,6 +24,7 @@ main {
     text-align: center;
     font-size: 50px;
 }
+
 .player-one-wins, 
 .player-two-wins {
     margin-top: -40px;
@@ -55,6 +58,7 @@ main {
     padding: 10px;
     cursor: pointer;
 }
+
 .grid-item {
     display: flex;
     height: 125px;
@@ -66,6 +70,7 @@ main {
     border: 3.5px solid;
     border-image: linear-gradient(45deg, red, blue) 1;
 }
+
 .grid-item#one, 
 .grid-item#two, 
 .grid-item#three {

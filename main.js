@@ -1,12 +1,14 @@
-var playerOneWins = document.querySelector('.player-one-wins');
-var playerTwoWins = document.querySelector('.player-two-wins');
+import { placeToken, displayGameStatus, displayWinStatus, displayDrawStatus, clearGameSquares} from './domUpdates.js'
+export { gameData }
 var playerOneToken = document.querySelector('.player-one-icon');
 var playerTwoToken = document.querySelector('.player-two-icon');
-var gameStatus = document.querySelector('.game-status');
 var gameBoardContainer = document.querySelector('.grid-container');
-var gameSquares = document.querySelectorAll('.grid-item');
 var gameBoard = [];
 var players = [];
+var gameData = {
+    players: players,
+    gameBoard: gameBoard
+}
 var winningCombinations = [
     {pieces:['one','two','three'],1:[],2:[]}, 
     {pieces:['four','five','six'],1:[],2:[]}, 
@@ -24,7 +26,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         retrievePlayersData();
         displayGameStatus();
         window.removeEventListener('load',initialLoad)
-    }
+    }   
 })
 
 function createPlayer(id,token) {
@@ -47,22 +49,20 @@ function initialLoad() {
     players.push(createPlayer(1,playerTwoToken.innerText));
     loadPlayers();
     storePlayersData();
+    exportData(players);
     displayGameStatus();
 }
 
 function storePlayersData() {
     localStorage.setItem('playerTurnData', `${JSON.stringify(players[0])}`)
-    localStorage.setItem('playerOneData',`${JSON.stringify(players[1])}`)
+    localStorage.setItem('playerOneData',`${JSON.stringify(players[1])}`)   
     localStorage.setItem('playerTwoData', `${JSON.stringify(players[2])}`)
 }
 
 function retrievePlayersData() {
-    var retrievedPlayerOne = localStorage.getItem('playerOneData');
-    var parsedPlayerOne = JSON.parse(retrievedPlayerOne)
-    var retrievedPlayerTwo = localStorage.getItem('playerTwoData');
-    var parsedPlayerTwo = JSON.parse(retrievedPlayerTwo)
-    var retrievePlayerTurn = localStorage.getItem('playerTurnData');
-    var parsedPlayerTurn = JSON.parse(retrievePlayerTurn)
+    var parsedPlayerTurn = JSON.parse(localStorage.getItem('playerTurnData'))
+    var parsedPlayerOne = JSON.parse(localStorage.getItem('playerOneData'))
+    var parsedPlayerTwo = JSON.parse(localStorage.getItem('playerTwoData'))
     return players[0] = parsedPlayerTurn, players[1] = parsedPlayerOne, players[2] = parsedPlayerTwo;
 }
 
@@ -80,6 +80,7 @@ function determineWin() {
         players[(players[0])].wins += 1;
         passTurn();
         storePlayersData();
+        exportData(players);
         passTurn();
     }
 }
@@ -96,31 +97,32 @@ function updateGameBoard(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
       gameBoard.push(e.target.id)
+      exportData(players,gameBoard)
       storePlayerPieces();
       placeToken();
       determineWin();
       passTurn();
     }
     displayGameStatus();
-}
-
-function placeToken() {
-    for (var i = 0; i < gameSquares.length; i++) {
-        if (gameBoard[gameBoard.length-1] === gameSquares[i].id) {
-            gameSquares[i].innerText = players[(players[0])].token;
-        }
+    if (playerWinCheck()) {
+        passTurn();
+        displayWinStatus();
+        passTurn();
+        clearBoard();
     }
+    else if (gameBoard.length === 9) {
+        displayDrawStatus();
+        clearBoard();
+    } 
 }
 
-function clearBoard () { 
+function clearBoard() { 
     gameBoard = [];
     for (var i = 0; i < winningCombinations.length; i++) {
         winningCombinations[i]['1'] = [];
         winningCombinations[i]['2'] = [];
     }
-    for (var i = 0; i < gameSquares.length; i++) {
-        gameSquares[i].innerText = "";
-    }
+    clearGameSquares();
 }
 
 function passTurn() {
@@ -132,29 +134,9 @@ function passTurn() {
     }
 }   
 
-function displayGameStatus() {
-    gameStatus.innerText = `It's ${players[(players[0])].token}'s turn`
-    playerOneWins.innerText= `${players[1].wins} wins`
-    playerTwoWins.innerText = `${players[2].wins} wins`
-    if (playerWinCheck()) {
-        passTurn();
-        gameStatus.innerText = `${players[(players[0])].token} wins!`
-        addDelayedMessage();
-        passTurn();
-        clearBoard();
-    }
-    else if (gameBoard.length === 9) {
-        gameStatus.innerText = 'The game is a draw.'
-        addDelayedMessage();
-        clearBoard();
-    }
+function exportData(playerData,gameBoard) {
+    gameData.players = playerData;
+    gameData.gameBoard = gameBoard;
 }
-
-function addDelayedMessage() {
-    setTimeout(function() {
-        gameStatus.innerText = `It's ${players[(players[0])].token}'s turn`}, 2000)
-}
-
-
 
 

@@ -1,5 +1,6 @@
 import { placeToken, displayGameStatus, displayWinStatus, displayDrawStatus, clearGameSquares} from './domUpdates.js'
 export { gameData }
+
 var playerOneToken = document.querySelector('.player-one-icon');
 var playerTwoToken = document.querySelector('.player-two-icon');
 var gameBoardContainer = document.querySelector('.grid-container');
@@ -22,7 +23,7 @@ var winningCombinations = [
 gameBoardContainer.addEventListener('click', updateGameBoard)
 window.addEventListener('load', initialLoad)
 window.addEventListener('DOMContentLoaded', (event) => {
-    if (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0) {
+    if ((localStorage.getItem('playerOneData')) && (localStorage.getItem('playerOneData').wins !== 0 && localStorage.getItem('playerTwoData').wins !== 0)) {
         retrievePlayersData();
         displayGameStatus();
         window.removeEventListener('load',initialLoad)
@@ -49,7 +50,7 @@ function initialLoad() {
     players.push(createPlayer(1,playerTwoToken.innerText));
     loadPlayers();
     storePlayersData();
-    exportData(players);
+    updateGameData(players);
     displayGameStatus();
 }
 
@@ -80,7 +81,7 @@ function determineWin() {
         players[(players[0])].wins += 1;
         passTurn();
         storePlayersData();
-        exportData(players);
+        updateGameData(players);
         passTurn();
     }
 }
@@ -97,7 +98,7 @@ function updateGameBoard(e) {
     e.preventDefault();
     if (e.target.className === 'grid-item' && !gameBoard.includes(e.target.id)) {
       gameBoard.push(e.target.id)
-      exportData(players,gameBoard)
+      updateGameData(players,gameBoard)
       storePlayerPieces();
       placeToken();
       determineWin();
@@ -134,7 +135,7 @@ function passTurn() {
     }
 }   
 
-function exportData(playerData,gameBoard) {
+function updateGameData(playerData,gameBoard) {
     gameData.players = playerData;
     gameData.gameBoard = gameBoard;
 }

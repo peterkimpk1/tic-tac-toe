@@ -13,6 +13,9 @@ This tic-tac-toe game was built by using HTML, CSS, and Javascript. Player 1 goe
 ### Preview of App: 
 https://imgur.com/a/tDaD49u
 
+### Demo:
+Click [here](https://peterkimpk1.github.io/tic-tac-toe/)
+
 ### Context:
 Final solo project for Module 1 and completed in 20 hours.
 

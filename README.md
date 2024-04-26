@@ -10,9 +10,6 @@ This tic-tac-toe game was built by using HTML, CSS, and Javascript. Player 1 goe
 4. Open the project by running code .
 5. Run the application by running index.html
 
-### Preview of App: 
-https://imgur.com/a/tDaD49u
-
 ### Demo:
 Click [here](https://peterkimpk1.github.io/tic-tac-toe/)
 
